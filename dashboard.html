@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Items - YIC Lost & Found</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+<div class="logo">
+<h1>YIC Lost & Found</h1>
+<p>Yanbu Industrial College</p>
+</div>
+<nav>
+<ul>
+<li><a href="index.html">Home</a></li>
+<li><a href="report-lost.html">Report Lost</a></li>
+<li><a href="post-found.html">Post Found</a></li>
+<li><a href="my-items.html" class="active">My Items</a></li>
+<li><a href="login.html">Login</a></li>
+</ul>
+</nav>
+</header>
+
+<div style="max-width: 800px; margin: 30px auto; padding: 0 20px;">
+<div style="background: white; border-radius: 16px; padding: 25px; border: 1px solid #d4e6f1;">
+<h2 style="color: #1a4a5f; margin-bottom: 20px;">📦 My Items</h2>
+<div id="itemsList"></div>
+</div>
+</div>
+
+<footer>
+<p>&copy; 2026 YIC Lost & Found Portal | CS381 Project</p>
+</footer>
+
+<script>
+const lostItems = [
+{ id: 1, title: "iPhone 14 Pro Max", location: "Library", date: "Jan 12, 2026", icon: "📱", owner: "Nora", type: "lost" },
+{ id: 2, title: "Samsung Watch", location: "Gym", date: "Jan 14, 2026", icon: "⌚", owner: "Sara", type: "lost" }
+];
+const foundItems = [
+{ id: 101, title: "iPhone 13", location: "Cafeteria", date: "Jan 14, 2026", icon: "📱", finder: "Reem", type: "found" }
+];
+const user = JSON.parse(localStorage.getItem('currentUser')) || { name: "Nora" };
+const myLost = lostItems.filter(i => i.owner === user.name);
+const myFound = foundItems.filter(i => i.finder === user.name);
+const all = [...myLost, ...myFound];
+const container = document.getElementById('itemsList');
+if (all.length === 0) {
+container.innerHTML = '<p style="color: #7a9eb0;">No items yet. <a href="report-lost.html">Report lost item</a></p>';
+} else {
+let html = '';
+for (let i = 0; i < all.length; i++) {
+const item = all[i];
+html += `<div style="display: flex; justify-content: space-between; align-items: center; padding: 12px; border-bottom: 1px solid #e1eff7;">
+<div><div style="font-weight: bold;">${item.icon} ${item.title}</div>
+<div style="font-size: 12px; color: #7a9eb0;">📍 ${item.location} | 📅 ${item.date}</div></div>
+<button onclick="window.location.href='item-detail.html?id=${item.id}&type=${item.type}'" style="background: #3a9bd5; color: white; border: none; padding: 5px 12px; border-radius: 15px;">View</button>
+</div>`;
+}
+container.innerHTML = html;
+}
+</script>
+</body>
+</html>
