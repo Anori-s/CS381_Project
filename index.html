@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YIC Lost & Found</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header>
+        <div class="logo">
+            <h1>YIC Lost & Found</h1>
+            <p>Yanbu Industrial College</p>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="index.html" class="active">Home</a></li>
+                <li><a href="report-lost.html">Report Lost</a></li>
+                <li><a href="post-found.html">Post Found</a></li>
+                <li><a href="my-items.html">My Items</a></li>
+                <li><a href="login.html">Login</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <h2>Lost Something? Found Something?</h2>
+        <p>Report lost items or post found items at Yanbu Industrial College</p>
+        <div class="hero-buttons">
+            <a href="report-lost.html" class="btn btn-primary">Report Lost Item</a>
+            <a href="post-found.html" class="btn btn-secondary">Post Found Item</a>
+        </div>
+    </section>
+
+    <section class="stats">
+        <div class="stat-box">
+            <h3>6</h3>
+            <p>Lost Items</p>
+        </div>
+        <div class="stat-box">
+            <h3>5</h3>
+            <p>Found Items</p>
+        </div>
+        <div class="stat-box">
+            <h3>63</h3>
+            <p>Returned</p>
+        </div>
+    </section>
+
+    <section class="search-section">
+        <input type="text" id="searchInput" placeholder="Search items...">
+        <select id="categoryFilter">
+            <option value="all">All Categories</option>
+            <option value="electronics">Electronics</option>
+            <option value="bags">Bags</option>
+            <option value="keys">Keys & Cards</option>
+            <option value="clothing">Clothing</option>
+            <option value="accessories">Accessories</option>
+        </select>
+        <button id="searchBtn">Search</button>
+    </section>
+
+    <div class="tabs">
+        <button class="tab-btn active" data-tab="lost">Lost Items</button>
+        <button class="tab-btn" data-tab="found">Found Items</button>
+    </div>
+
+    <!-- Lost Items Panel -->
+    <section id="lostPanel" class="panel active-panel">
+        <h3>📱 Recently Lost Items</h3>
+        <div class="items-grid" id="lostItemsGrid"></div>
+    </section>
+
+    <!-- Found Items Panel -->
+    <section id="foundPanel" class="panel">
+        <h3>🔍 Recently Found Items</h3>
+        <div class="items-grid" id="foundItemsGrid"></div>
+    </section>
+
+    <footer>
+        <p>&copy; 2026 YIC Lost & Found Portal | CS381 Project</p>
+    </footer>
+
+    <script src="main.js"></script>
+</body>
+</html>
