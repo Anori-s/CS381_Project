@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login - YIC Lost & Found</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+<div class="logo">
+<h1>YIC Lost & Found</h1>
+<p>Yanbu Industrial College</p>
+</div>
+<nav>
+<ul>
+<li><a href="index.html">Home</a></li>
+<li><a href="report-lost.html">Report Lost</a></li>
+<li><a href="post-found.html">Post Found</a></li>
+<li><a href="my-items.html">My Items</a></li>
+<li><a href="login.html" class="active">Login</a></li>
+</ul>
+</nav>
+</header>
+<div style="max-width: 450px; margin: 50px auto; padding: 0 20px;">
+<div style="background: white; border-radius: 20px; padding: 35px; border: 1px solid #d4e6f1;">
+<div style="text-align: center; margin-bottom: 25px;">
+<div style="font-size: 50px;">🔐</div>
+<h2 style="color: #1a4a5f;">Welcome Back</h2>
+<p style="color: #7a9eb0;">Sign in to your account</p>
+</div>
+<div style="background: #e1eff7; padding: 12px; border-radius: 12px; margin-bottom: 25px; font-size: 13px; text-align: center;">
+📌 Demo: student@yic.edu.sa / 123456<br>
+Admin: admin@yic.edu.sa / 123456
+</div>
+<form id="loginForm">
+<div style="margin-bottom: 20px;">
+<label style="display: block; margin-bottom: 8px; color: #1a4a5f;">Email</label>
+<input type="email" id="email" style="width: 100%; padding: 12px; border: 1px solid #c5d9e8; border-radius: 12px;" placeholder="student@yic.edu.sa" required>
+</div>
+<div style="margin-bottom: 25px;">
+<label style="display: block; margin-bottom: 8px; color: #1a4a5f;">Password</label>
+<input type="password" id="password" style="width: 100%; padding: 12px; border: 1px solid #c5d9e8; border-radius: 12px;" placeholder="Enter password" required>
+</div>
+<div style="display: flex; justify-content: space-between; margin-bottom: 25px;">
+<label><input type="checkbox" id="remember"> Remember me</label>
+<a href="#" style="color: #3a9bd5;">Forgot?</a>
+</div>
+<button type="submit" style="width: 100%; background: #3a9bd5; color: white; border: none; padding: 14px; border-radius: 30px; cursor: pointer;">Sign In →</button>
+<p style="text-align: center; margin-top: 20px;">No account? <a href="register.html" style="color: #3a9bd5;">Register</a></p>
+</form>
+</div>
+</div>
+<footer style="text-align: center; padding: 25px; background: #e1eff7; color: #7a9eb0;">
+<p>&copy; 2026 YIC Lost & Found Portal</p>
+</footer>
+<script>
+const users = [
+{ email: "student@yic.edu.sa", password: "123456", role: "student", name: "Nora" },
+{ email: "admin@yic.edu.sa", password: "123456", role: "admin", name: "Admin" }
+];
+document.getElementById('loginForm').addEventListener('submit', function(e) {
+e.preventDefault();
+const email = document.getElementById('email').value.trim();
+const pass = document.getElementById('password').value;
+const user = users.find(u => u.email === email && u.password === pass);
+if (user) {
+localStorage.setItem('currentUser', JSON.stringify({ email: user.email, name: user.name, role: user.role }));
+if (document.getElementById('remember').checked) localStorage.setItem('rememberedEmail', email);
+else localStorage.removeItem('rememberedEmail');
+window.location.href = user.role === 'admin' ? 'admin.html' : 'dashboard.html';
+} else alert('Invalid email or password');
+});
+const remembered = localStorage.getItem('rememberedEmail');
+if (remembered) {
+document.getElementById('email').value = remembered;
+document.getElementById('remember').checked = true;
+}
+</script>
+</body>
+</html>
