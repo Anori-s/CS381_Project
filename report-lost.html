@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Report Lost Item - YIC Lost & Found</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+    <div class="logo">
+        <h1>YIC Lost & Found</h1>
+        <p>Yanbu Industrial College</p>
+    </div>
+    <nav>
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="report-lost.html" class="active">Report Lost</a></li>
+            <li><a href="post-found.html">Post Found</a></li>
+            <li><a href="dashboard.html">My Items</a></li>
+            <li><a href="login.html">Login</a></li>
+        </ul>
+    </nav>
+</header>
+
+<div class="form-container">
+    <h2>📋 Report Lost Item</h2>
+
+    <form id="reportLostForm">
+
+        <div class="form-group">
+            <label for="itemTitle">Item Name *</label>
+            <input type="text" id="itemTitle" placeholder="e.g. Black Nike Backpack" required>
+        </div>
+
+        <div class="form-group">
+            <label for="category">Category *</label>
+            <select id="category" required>
+                <option value="">-- Select Category --</option>
+                <option value="electronics">Electronics</option>
+                <option value="bags">Bags & Luggage</option>
+                <option value="clothing">Clothing</option>
+                <option value="keys">Keys & Cards</option>
+                <option value="accessories">Accessories</option>
+                <option value="books">Books & Stationery</option>
+                <option value="other">Other</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="location">Last Seen Location *</label>
+            <input type="text" id="location" placeholder="e.g. Library, 2nd Floor" required>
+        </div>
+
+        <div class="form-group">
+            <label for="dateLost">Date Lost *</label>
+            <input type="date" id="dateLost" required>
+        </div>
+
+        <div class="form-group">
+            <label for="description">Description *</label>
+            <textarea id="description" placeholder="Describe the item in detail: color, brand, size, what's inside if a bag..." required></textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="contact">Your Contact Email *</label>
+            <input type="email" id="contact" placeholder="your@yic.edu.sa" required>
+        </div>
+
+        <div class="form-group">
+            <label for="reward">Reward (optional)</label>
+            <input type="text" id="reward" placeholder="e.g. 50 SAR reward for return">
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn-submit">Submit Report</button>
+            <a href="index.html" class="btn-cancel">Cancel</a>
+        </div>
+
+    </form>
+</div>
+
+<footer>
+    <p>&copy; 2026 YIC Lost & Found Portal | CS381 Project</p>
+</footer>
+
+<script>
+    // Set max date to today
+    document.getElementById('dateLost').max = new Date().toISOString().split('T')[0];
+
+    document.getElementById('reportLostForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        const title    = document.getElementById('itemTitle').value.trim();
+        const category = document.getElementById('category').value;
+        const location = document.getElementById('location').value.trim();
+        const date     = document.getElementById('dateLost').value;
+        const desc     = document.getElementById('description').value.trim();
+        const contact  = document.getElementById('contact').value.trim();
+        const reward   = document.getElementById('reward').value.trim();
+
+        if (!title || !category || !location || !date || !desc || !contact) {
+            alert('Please fill in all required fields.');
+            return;
+        }
+
+        // Get existing lost items from localStorage
+        const existing = JSON.parse(localStorage.getItem('lostItems')) || [];
+
+        // Create new item
+        const newItem = {
+            id: Date.now(),
+            title: title,
+            category: category,
+            location: location,
+            date: new Date(date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+            description: desc,
+            icon: getCategoryIcon(category),
+            owner: JSON.parse(localStorage.getItem('currentUser'))?.name || 'Anonymous',
+            contact: contact,
+            reward: reward,
+            type: 'lost'
+        };
+
+        existing.push(newItem);
+        localStorage.setItem('lostItems', JSON.stringify(existing));
+
+        alert('✅ Lost item reported successfully!');
+        window.location.href = 'index.html';
+    });
+
+    function getCategoryIcon(category) {
+        const icons = {
+            electronics: '📱',
+            bags: '🎒',
+            clothing: '👕',
+            keys: '🔑',
+            accessories: '⌚',
+            books: '📚',
+            other: '📦'
+        };
+        return icons[category] || '📦';
+    }
+</script>
+
+</body>
+</html>

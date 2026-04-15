@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Item Detail - YIC Lost & Found</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+    <div class="logo">
+        <h1>YIC Lost & Found</h1>
+        <p>Yanbu Industrial College</p>
+    </div>
+    <nav>
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="report-lost.html">Report Lost</a></li>
+            <li><a href="post-found.html">Post Found</a></li>
+            <li><a href="dashboard.html">My Items</a></li>
+            <li><a href="login.html">Login</a></li>
+        </ul>
+    </nav>
+</header>
+
+<div style="max-width: 650px; margin: 40px auto; padding: 0 20px;">
+
+    <!-- Back link -->
+    <a href="index.html" style="color: #3a9bd5; font-size: 14px; text-decoration: none;">← Back to listings</a>
+
+    <!-- Item detail card -->
+    <div id="detailCard" style="background: white; border-radius: 20px; padding: 30px; margin-top: 20px; border: 1px solid #d4e6f1; box-shadow: 0 4px 15px rgba(0,0,0,0.04);">
+        <p style="color: #7a9eb0;">Loading...</p>
+    </div>
+
+    <!-- Claim / Contact form -->
+    <div id="claimSection" style="display: none; background: white; border-radius: 20px; padding: 30px; margin-top: 20px; border: 1px solid #d4e6f1;">
+        <h3 style="color: #3a9bd5; margin-bottom: 20px; font-weight: 500;">📩 Send a Message</h3>
+        <form id="claimForm">
+            <div class="form-group">
+                <label for="claimName">Your Name *</label>
+                <input type="text" id="claimName" placeholder="Your full name" required>
+            </div>
+            <div class="form-group">
+                <label for="claimEmail">Your Email *</label>
+                <input type="email" id="claimEmail" placeholder="your@yic.edu.sa" required>
+            </div>
+            <div class="form-group">
+                <label for="claimMessage">Message *</label>
+                <textarea id="claimMessage" placeholder="Describe the item to prove it's yours, or explain where you found it..." required></textarea>
+            </div>
+            <div class="form-actions">
+                <button type="submit" class="btn-submit">Send Message</button>
+            </div>
+        </form>
+    </div>
+
+</div>
+
+<footer>
+    <p>&copy; 2026 YIC Lost & Found Portal | CS381 Project</p>
+</footer>
+
+<script>
+
+    function getParam(name) {
+        const params = new URLSearchParams(window.location.search);
+        return params.get(name);
+    }
+
+    const itemId   = parseInt(getParam('id'));
+    const itemType = getParam('type');
+
+    // Load items from localStorage (seeded by main.js)
+    const lostItems  = JSON.parse(localStorage.getItem('lostItems'))  || [];
+    const foundItems = JSON.parse(localStorage.getItem('foundItems')) || [];
+
+    const allItems = [...lostItems, ...foundItems];
+    const item = allItems.find(i => i.id === itemId);
+
+    const card = document.getElementById('detailCard');
+
+    if (!item) {
+        card.innerHTML = '<p style="color: #7a9eb0;">Item not found. <a href="index.html" style="color:#3a9bd5;">Go back</a></p>';
+    } else {
+        const isLost   = itemType === 'lost' || item.type === 'lost';
+        const statusClass = isLost ? 'status-lost' : 'status-found';
+        const statusText  = isLost ? 'Lost' : 'Found';
+        const personLabel = isLost ? 'Reported by' : 'Found by';
+        const personName  = isLost ? (item.owner  || '—') : (item.finder || '—');
+
+        card.innerHTML = `
+            <div style="font-size: 60px; margin-bottom: 16px;">${item.icon || '📦'}</div>
+            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 14px; flex-wrap: wrap;">
+                <h2 style="font-size: 22px; color: #1a4a5f; font-weight: 600;">${item.title}</h2>
+                <span class="item-status ${statusClass}">${statusText}</span>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 10px; font-size: 14px; color: #5a7f8c; margin-bottom: 20px;">
+                <span>📍 <strong>Location:</strong> ${item.location}</span>
+                <span>📅 <strong>Date:</strong> ${item.date}</span>
+                <span>📂 <strong>Category:</strong> ${item.category}</span>
+                <span>👤 <strong>${personLabel}:</strong> ${personName}</span>
+                ${item.reward ? `<span>💰 <strong>Reward:</strong> ${item.reward}</span>` : ''}
+                ${item.heldAt ? `<span>📦 <strong>Item held at:</strong> ${getHeldLabel(item.heldAt)}</span>` : ''}
+            </div>
+            <div style="border-top: 1px solid #d4e6f1; padding-top: 18px;">
+                <p style="font-size: 13px; color: #7a9eb0; margin-bottom: 6px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.04em;">Description</p>
+                <p style="font-size: 15px; color: #1a4a5f; line-height: 1.7;">${item.description}</p>
+            </div>
+            <div style="margin-top: 22px;">
+                <button onclick="showClaimForm()" class="btn-submit" style="border: none; cursor: pointer;">
+                    ${isLost ? '✋ I Found This Item' : '📩 This Is Mine'}
+                </button>
+            </div>
+        `;
+
+        // Show the claim section
+        document.getElementById('claimSection').style.display = 'block';
+    }
+
+    function getHeldLabel(val) {
+        const map = {
+            self:     'With the finder',
+            security: 'Security Office',
+            admin:    'College Admin',
+            dept:     'Department Office'
+        };
+        return map[val] || val;
+    }
+
+    function showClaimForm() {
+        const section = document.getElementById('claimSection');
+        section.scrollIntoView({ behavior: 'smooth' });
+        document.getElementById('claimName').focus();
+    }
+
+    document.getElementById('claimForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const name    = document.getElementById('claimName').value.trim();
+        const email   = document.getElementById('claimEmail').value.trim();
+        const message = document.getElementById('claimMessage').value.trim();
+
+        if (!name || !email || !message) {
+            alert('Please fill in all fields.');
+            return;
+        }
+
+        alert('✅ Your message has been sent! The ' + (itemType === 'lost' ? 'owner' : 'finder') + ' will contact you.');
+        this.reset();
+    });
+</script>
+
+</body>
+</html>
